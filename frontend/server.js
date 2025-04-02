@@ -5,7 +5,11 @@ const axios = require('axios');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const BACKEND_URL = 'http://localhost:8000';
+
+// Get the current Replit URL from the environment
+const REPLIT_URL = process.env.REPLIT_DEPLOYMENT_URL || process.env.REPLIT_URL;
+// For local development, use localhost, otherwise use the Replit URL
+const BACKEND_URL = REPLIT_URL ? `https://${REPLIT_URL.replace('https://', '').replace(':5000', ':8000')}` : 'http://localhost:8000';
 
 // Enable CORS
 app.use(cors());

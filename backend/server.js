@@ -63,9 +63,15 @@ app.post('/api/alarms/:id/stop', (req, res) => {
 
 // Root route - redirect to frontend
 app.get('/', (req, res) => {
-    const frontendUrl = process.env.NODE_ENV === 'production' 
-        ? `http://${req.hostname}:5000` 
+    // Get the Replit URL from environment
+    const REPLIT_URL = process.env.REPLIT_DEPLOYMENT_URL || process.env.REPLIT_URL;
+    
+    // If we're on Replit, use the Replit URL, otherwise use localhost
+    const frontendUrl = REPLIT_URL 
+        ? `https://${REPLIT_URL.replace('https://', '').replace(':8000', ':5000')}` 
         : 'http://localhost:5000';
+    
+    console.log(`Redirecting to frontend: ${frontendUrl}`);
     res.redirect(frontendUrl);
 });
 
