@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const binanceService = require('../services/binanceService');
+const coinService = require('../services/coindcxService');
 
 // Get prices for multiple coins
 router.get('/prices', async (req, res, next) => {
@@ -15,7 +15,7 @@ router.get('/prices', async (req, res, next) => {
         const symbolArray = symbols.split(',').map(s => s.trim());
         
         // Get prices for all symbols
-        const prices = await binanceService.getPrices(symbolArray);
+        const prices = await coinService.getPrices(symbolArray);
         
         res.json(prices);
     } catch (error) {
@@ -26,7 +26,7 @@ router.get('/prices', async (req, res, next) => {
 // Get default coins (popular ones)
 router.get('/default', async (req, res, next) => {
     try {
-        const defaultCoins = await binanceService.getDefaultCoins();
+        const defaultCoins = await coinService.getDefaultCoins();
         res.json(defaultCoins);
     } catch (error) {
         next(error);
@@ -42,7 +42,7 @@ router.get('/search/:query', async (req, res, next) => {
             return res.status(400).json({ error: 'Search query must be at least 2 characters' });
         }
         
-        const results = await binanceService.searchCoins(query);
+        const results = await coinService.searchCoins(query);
         res.json(results);
     } catch (error) {
         next(error);
@@ -59,7 +59,7 @@ router.get('/:symbol', async (req, res, next) => {
             return res.status(400).json({ error: 'Invalid symbol parameter' });
         }
         
-        const coinInfo = await binanceService.getCoinInfo(symbol);
+        const coinInfo = await coinService.getCoinInfo(symbol);
         
         if (!coinInfo) {
             return res.status(404).json({ error: `Coin ${symbol} not found` });

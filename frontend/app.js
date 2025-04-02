@@ -298,7 +298,7 @@ const App = () => {
             )}
             
             <footer className="bg-gray-100 p-3 text-center text-gray-500 text-sm border-t">
-                Data provided by Binance API
+                Data provided by CoinDCX API
             </footer>
         </div>
     );
