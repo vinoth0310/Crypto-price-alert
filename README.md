@@ -12,7 +12,7 @@ A Progressive Web App (PWA) that monitors cryptocurrency prices and alerts you w
 
 ## Technology Stack
 
-- **Frontend**: HTML, CSS (Tailwind), JavaScript
+- **Frontend**: HTML, CSS, JavaScript
 - **Backend**: Node.js with Express
 - **APIs**: CoinDCX for cryptocurrency data
 - **PWA Features**: Service worker, manifest.json for installation
@@ -38,8 +38,8 @@ Simply visit the deployed app URL in your browser.
 ### Setup
 1. Clone the repository
 ```
-git clone https://github.com/yourusername/crypto-price-alert.git
-cd crypto-price-alert
+git clone https://github.com/vinoth0310/Crypto-price-alert.git
+cd Crypto-price-alert
 ```
 
 2. Install dependencies
@@ -58,7 +58,7 @@ cd frontend
 node server.js
 ```
 
-4. Access the app at `http://localhost:5000`
+4. Access the app at the server URL
 
 ## Project Structure
 
