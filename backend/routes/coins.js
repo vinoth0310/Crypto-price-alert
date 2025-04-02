@@ -34,15 +34,15 @@ router.get('/default', async (req, res, next) => {
 });
 
 // Search for coins by name or symbol
-router.get('/search/:query', async (req, res, next) => {
+router.get('/search', async (req, res, next) => {
     try {
-        const { query } = req.params;
+        const { q } = req.query;
         
-        if (!query || query.length < 2) {
+        if (!q || q.length < 2) {
             return res.status(400).json({ error: 'Search query must be at least 2 characters' });
         }
         
-        const results = await coinService.searchCoins(query);
+        const results = await coinService.searchCoins(q);
         res.json(results);
     } catch (error) {
         next(error);
