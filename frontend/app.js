@@ -1,10 +1,28 @@
 // Main App Component
+// Check if the app is in standalone (installed PWA) mode
+const isInStandaloneMode = () => {
+    return (window.matchMedia('(display-mode: standalone)').matches) || 
+           (window.navigator.standalone) || 
+           document.referrer.includes('android-app://');
+};
+
 const App = () => {
     const [coins, setCoins] = React.useState([]);
     const [alerts, setAlerts] = React.useState([]);
     const [loading, setLoading] = React.useState(true);
     const [error, setError] = React.useState(null);
-    const [activeTab, setActiveTab] = React.useState('coins'); // tabs: coins, alerts
+    const [activeTab, setActiveTab] = React.useState('coins'); // tabs: coins, alerts, install
+    const [isInstalled, setIsInstalled] = React.useState(isInStandaloneMode());
+    
+    // Check for standalone mode on mount and when visibility changes
+    React.useEffect(() => {
+        const checkStandaloneMode = () => {
+            setIsInstalled(isInStandaloneMode());
+        };
+        
+        window.addEventListener('visibilitychange', checkStandaloneMode);
+        return () => window.removeEventListener('visibilitychange', checkStandaloneMode);
+    }, []);
 
     // Initialize notification permission
     React.useEffect(() => {
@@ -215,6 +233,14 @@ const App = () => {
                 >
                     Alerts
                 </button>
+                {!isInstalled && (
+                    <button 
+                        className={`flex-1 py-3 text-center font-medium ${activeTab === 'install' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500'}`}
+                        onClick={() => setActiveTab('install')}
+                    >
+                        Install
+                    </button>
+                )}
             </div>
             
             {/* Loading indicator */}
@@ -294,6 +320,85 @@ const App = () => {
                             )}
                         </>
                     )}
+                    
+                    {activeTab === 'install' && (
+                        <div className="p-4">
+                            <h2 className="text-xl font-semibold mb-4">Install App on iOS</h2>
+                            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-6">
+                                <p className="text-blue-700 font-medium">
+                                    Install this app on your iOS device for a better experience with offline support and notifications!
+                                </p>
+                            </div>
+                            
+                            <div className="space-y-6">
+                                <div className="flex items-start">
+                                    <div className="bg-gray-200 rounded-full h-8 w-8 flex items-center justify-center text-blue-600 font-bold mr-3 flex-shrink-0">
+                                        1
+                                    </div>
+                                    <div>
+                                        <h3 className="font-medium text-lg mb-2">Open in Safari</h3>
+                                        <p className="text-gray-600 mb-2">This app needs to be opened in Safari browser on your iOS device. If you're using another browser, copy the URL and open it in Safari.</p>
+                                    </div>
+                                </div>
+                                
+                                <div className="flex items-start">
+                                    <div className="bg-gray-200 rounded-full h-8 w-8 flex items-center justify-center text-blue-600 font-bold mr-3 flex-shrink-0">
+                                        2
+                                    </div>
+                                    <div>
+                                        <h3 className="font-medium text-lg mb-2">Tap the Share button</h3>
+                                        <p className="text-gray-600 mb-2">At the bottom of Safari, tap the Share button (square with an arrow pointing up).</p>
+                                        <div className="bg-gray-100 p-3 rounded-lg text-center my-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="mx-auto">
+                                                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                                                <polyline points="16 6 12 2 8 6"></polyline>
+                                                <line x1="12" y1="2" x2="12" y2="15"></line>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div className="flex items-start">
+                                    <div className="bg-gray-200 rounded-full h-8 w-8 flex items-center justify-center text-blue-600 font-bold mr-3 flex-shrink-0">
+                                        3
+                                    </div>
+                                    <div>
+                                        <h3 className="font-medium text-lg mb-2">Tap "Add to Home Screen"</h3>
+                                        <p className="text-gray-600 mb-2">Scroll down in the share menu and tap "Add to Home Screen".</p>
+                                    </div>
+                                </div>
+                                
+                                <div className="flex items-start">
+                                    <div className="bg-gray-200 rounded-full h-8 w-8 flex items-center justify-center text-blue-600 font-bold mr-3 flex-shrink-0">
+                                        4
+                                    </div>
+                                    <div>
+                                        <h3 className="font-medium text-lg mb-2">Name the app and tap "Add"</h3>
+                                        <p className="text-gray-600 mb-2">You can keep the default name or edit it, then tap "Add" in the top-right corner.</p>
+                                    </div>
+                                </div>
+                                
+                                <div className="bg-green-50 p-4 rounded-lg border border-green-200 mt-6">
+                                    <h3 className="font-medium text-green-800 mb-2">You're all set! 🎉</h3>
+                                    <p className="text-green-700">The app will now be installed on your home screen and can be used like a native app with full-screen experience, offline support, and push notifications for price alerts!</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            )}
+            
+            {!isInstalled && activeTab !== 'install' && (
+                <div className="bg-blue-50 p-3 border-t border-blue-100 text-center">
+                    <p className="text-blue-800 font-medium">
+                        Turn this website into an iOS app!
+                    </p>
+                    <button 
+                        className="text-blue-600 mt-1 text-sm underline"
+                        onClick={() => setActiveTab('install')}
+                    >
+                        See how to install
+                    </button>
                 </div>
             )}
             
