@@ -1,9 +1,7 @@
 // API Service for communicating with the backend
 const ApiService = {
     // Base URL for API requests
-    baseUrl: window.location.hostname === 'localhost' 
-        ? 'http://localhost:8000/api' 
-        : `http://${window.location.hostname}:8000/api`,
+    baseUrl: '/api',
     
     // Get info for a specific coin
     getCoinInfo: async (symbol) => {
