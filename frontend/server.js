@@ -19,7 +19,8 @@ app.use(express.static(__dirname));
 // Proxy API requests to the backend server
 app.use('/api', async (req, res) => {
   try {
-    const url = `${BACKEND_URL}${req.url}`;
+    // Add /api prefix to the URL path for the backend
+    const url = `${BACKEND_URL}/api${req.url}`;
     console.log(`Proxying request to: ${url}`);
     
     const method = req.method.toLowerCase();
