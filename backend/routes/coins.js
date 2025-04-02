@@ -49,6 +49,40 @@ router.get('/search', async (req, res, next) => {
     }
 });
 
+// Get current price for a specific coin
+router.get('/price/:symbol', async (req, res, next) => {
+    try {
+        const { symbol } = req.params;
+        
+        // Validate symbol format
+        if (!symbol || typeof symbol !== 'string') {
+            return res.status(400).json({ error: 'Invalid symbol parameter' });
+        }
+        
+        // Format symbol to ensure USDT suffix
+        let formattedSymbol = symbol.toUpperCase();
+        if (!formattedSymbol.endsWith('USDT')) {
+            formattedSymbol += 'USDT';
+        }
+        
+        // Get price for this coin
+        const prices = await coinService.getPrices([formattedSymbol]);
+        
+        if (!prices || prices.length === 0) {
+            return res.status(404).json({ error: `Price for ${symbol} not found` });
+        }
+        
+        // Return just the current price
+        res.json({
+            symbol: formattedSymbol,
+            price: prices[0].price,
+            lastUpdated: new Date().toISOString()
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
 // Get information for a specific coin (Must be last route due to :symbol being a catch-all)
 router.get('/:symbol', async (req, res, next) => {
     try {

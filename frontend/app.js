@@ -24,9 +24,24 @@ const App = () => {
         return () => window.removeEventListener('visibilitychange', checkStandaloneMode);
     }, []);
 
-    // Initialize notification permission
+    // Initialize notification permission and alarm system
     React.useEffect(() => {
+        // Request notification permission
         NotificationService.requestPermission();
+        
+        // Initialize alarm system for continuous price monitoring
+        NotificationService.initAlarmSystem();
+        
+        // Clean up the alarm system on component unmount
+        return () => {
+            // Clear alarm check interval
+            if (NotificationService.alarmCheckInterval) {
+                clearInterval(NotificationService.alarmCheckInterval);
+            }
+            
+            // Stop any active alarms
+            NotificationService.stopAllAlarms();
+        };
     }, []);
 
     // Load coins and alerts from local storage
